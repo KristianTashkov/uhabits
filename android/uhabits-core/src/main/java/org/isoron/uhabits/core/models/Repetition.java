@@ -41,8 +41,10 @@ public final class Repetition
     /**
      * The value of the repetition.
      *
-     * For boolean habits, this equals Checkmark.CHECKED_EXPLICITLY if performed
-     * or Checkmark.SKIPPED_EXPLICITLY if skipped.
+     * For boolean habits, this equals:
+     * Checkmark.CHECKED_EXPLICITLY if performed
+     * Checkmark.SKIPPED_EXPLICITLY if skipped.
+     * Checkmark.FAILED_EXPLICITLY_NECESSARY if failed.
      * For numerical habits, this number is stored in thousandths. That
      * is, if the user enters value 1.50 on the app, it is here stored as 1500.
      */

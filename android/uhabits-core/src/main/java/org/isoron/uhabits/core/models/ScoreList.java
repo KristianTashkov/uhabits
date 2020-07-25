@@ -275,19 +275,23 @@ public abstract class ScoreList implements Iterable<Score>
         for (int i = 0; i < checkmarkValues.length; i++)
         {
             double value = checkmarkValues[checkmarkValues.length - i - 1];
+            boolean skip_calculation = false;
 
             if (habit.isNumerical())
             {
                 value /= 1000;
                 value /= habit.getTargetValue();
                 value = Math.min(1, value);
+            } else
+            {
+                if (value == Checkmark.UNCHECKED ||
+                    value == Checkmark.FAILED_EXPLICITLY_NECESSARY) value = 0;
+                else if (value == Checkmark.SKIPPED_EXPLICITLY) skip_calculation = true;
+                else value = 1;
             }
 
-            if (!habit.isNumerical() && value > 0) {
-                value = value != Checkmark.SKIPPED_EXPLICITLY ? 1 : -1;
-            }
-
-            if (value > -1) {
+            if (!skip_calculation)
+            {
                 previousValue = Score.compute(freq, previousValue, value);
             }
             scores.add(new Score(from.plus(i), previousValue));

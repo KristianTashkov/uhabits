@@ -138,13 +138,19 @@ public abstract class StreakList
         {
             boolean isCurrentChecked = (
                     checks[i] == Checkmark.CHECKED_EXPLICITLY ||
-                        checks[i] == Checkmark.CHECKED_IMPLICITLY
+                    checks[i] == Checkmark.CHECKED_IMPLICITLY ||
+                    checks[i] == Checkmark.FAILED_EXPLICITLY_UNNECESSARY
             );
+            boolean isCurrentFailed = (
+                    checks[i] == Checkmark.UNCHECKED ||
+                    checks[i] == Checkmark.FAILED_EXPLICITLY_NECESSARY
+            );
+
             if (habit.getData().type == Habit.NUMBER_HABIT || isCurrentChecked) {
                 lastSuccesful = current;
             }
 
-            if (isInStreak && checks[i] == 0) {
+            if (isInStreak && isCurrentFailed) {
                 list.add(lastSuccesful);
                 isInStreak = false;
             }
