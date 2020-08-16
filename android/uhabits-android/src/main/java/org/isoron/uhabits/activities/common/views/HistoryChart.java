@@ -143,7 +143,7 @@ public class HistoryChart extends ScrollableChart
         final Timestamp timestamp = positionToTimestamp(x, y);
         if (timestamp == null) return false;
 
-        Timestamp today = DateUtils.getToday();
+        Timestamp today = DateUtils.getToday(true);
         int offset = timestamp.daysUntil(today);
         if (offset < checkmarks.length)
         {
@@ -477,12 +477,12 @@ public class HistoryChart extends ScrollableChart
 
     private void updateDate()
     {
-        baseDate = DateUtils.getStartOfTodayCalendar();
+        baseDate = DateUtils.getStartOfTodayCalendar(true);
         baseDate.add(Calendar.DAY_OF_YEAR, -(getDataOffset() - 1) * 7);
 
         nDays = (nColumns - 1) * 7;
         int realWeekday =
-            DateUtils.getStartOfTodayCalendar().get(Calendar.DAY_OF_WEEK);
+            DateUtils.getStartOfTodayCalendar(true).get(Calendar.DAY_OF_WEEK);
         todayPositionInColumn =
             (7 + realWeekday - firstWeekday) % 7;
 

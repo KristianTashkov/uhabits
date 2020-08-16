@@ -346,6 +346,16 @@ public class Preferences
         return Integer.parseInt(weekday);
     }
 
+    public int getStartDayHourOffset()
+    {
+        return storage.getInt("pref_start_day_offset_hour", 3);
+    }
+
+    public int getStartDayMinuteOffset()
+    {
+        return storage.getInt("pref_start_day_offset_minute", 0);
+    }
+
     public interface Listener
     {
         default void onCheckmarkSequenceChanged()
