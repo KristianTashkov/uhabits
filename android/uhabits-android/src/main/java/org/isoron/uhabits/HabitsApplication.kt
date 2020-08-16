@@ -62,7 +62,8 @@ class HabitsApplication : Application() {
         }
         val prefs = component.preferences
         prefs.setLastAppVersion(BuildConfig.VERSION_CODE)
-        DateUtils.setStartDayOffset(prefs.startDayHourOffset, prefs.startDayMinuteOffset)
+        val startDayOffset = prefs.startDayOffset
+        DateUtils.setStartDayOffset(startDayOffset.hours, startDayOffset.minutes)
 
         widgetUpdater = component.widgetUpdater
         widgetUpdater.startListening()

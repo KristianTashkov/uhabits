@@ -60,6 +60,13 @@
                 android:title="@string/first_day_of_the_week"
                 app:iconSpaceReserved="false" />
 
+        <Preference
+            android:key="pref_custom_start_day"
+            android:title="@string/custom_start_day"
+            app:iconSpaceReserved="false">
+        </Preference>
+
+
     </PreferenceCategory>
 
     <PreferenceCategory
