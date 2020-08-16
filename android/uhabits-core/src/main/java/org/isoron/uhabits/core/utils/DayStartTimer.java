@@ -30,19 +30,19 @@ import javax.inject.*;
  * A class that emits events when a new day starts.
  */
 @AppScope
-public class MidnightTimer
+public class DayStartTimer
 {
-    private final List<MidnightListener> listeners;
+    private final List<DayStartListener> listeners;
 
     private ScheduledExecutorService executor;
 
     @Inject
-    public MidnightTimer()
+    public DayStartTimer()
     {
         this.listeners = new LinkedList<>();
     }
 
-    public synchronized void addListener(MidnightListener listener)
+    public synchronized void addListener(DayStartListener listener)
     {
         this.listeners.add(listener);
     }
@@ -54,24 +54,26 @@ public class MidnightTimer
 
     public synchronized void onResume()
     {
+        if (executor != null)
+            executor.shutdownNow();
         executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleAtFixedRate(() -> notifyListeners(),
             DateUtils.millisecondsUntilTomorrow() + 1000,
             DateUtils.DAY_LENGTH, TimeUnit.MILLISECONDS);
     }
 
-    public synchronized void removeListener(MidnightListener listener)
+    public synchronized void removeListener(DayStartListener listener)
     {
         this.listeners.remove(listener);
     }
 
     private synchronized void notifyListeners()
     {
-        for (MidnightListener l : listeners) l.atMidnight();
+        for (DayStartListener l : listeners) l.atDayStart();
     }
 
-    public interface MidnightListener
+    public interface DayStartListener
     {
-        void atMidnight();
+        void atDayStart();
     }
 }

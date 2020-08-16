@@ -36,10 +36,10 @@ import java.util.*
 class HeaderView(
         context: Context,
         val prefs: Preferences,
-        val midnightTimer: MidnightTimer
+        val dayStartTimer: DayStartTimer
 ) : ScrollableChart(context),
     Preferences.Listener,
-    MidnightTimer.MidnightListener {
+        DayStartTimer.DayStartListener {
 
     private var drawer = Drawer()
 
@@ -55,7 +55,7 @@ class HeaderView(
         if (SDK_INT >= LOLLIPOP) elevation = dp(2.0f)
     }
 
-    override fun atMidnight() {
+    override fun atDayStart() {
         post { invalidate() }
     }
 
@@ -68,11 +68,11 @@ class HeaderView(
         super.onAttachedToWindow()
         updateScrollDirection()
         prefs.addListener(this)
-        midnightTimer.addListener(this)
+        dayStartTimer.addListener(this)
     }
 
     override fun onDetachedFromWindow() {
-        midnightTimer.removeListener(this)
+        dayStartTimer.removeListener(this)
         prefs.removeListener(this)
         super.onDetachedFromWindow()
     }

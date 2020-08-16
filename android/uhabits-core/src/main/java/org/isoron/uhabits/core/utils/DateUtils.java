@@ -177,50 +177,60 @@ public abstract class DateUtils
     @NonNull
     public static Timestamp getToday()
     {
-        return new Timestamp(getStartOfToday());
+        return getToday(false);
     }
 
     @NonNull
     public static Timestamp getToday(boolean withOffset)
     {
-        if (withOffset)
-            return new Timestamp(getStartOfToday(startDayHourOffset, startDayMinuteOffset));
-        else
-            return new Timestamp(getStartOfToday());
+        return new Timestamp(getStartOfToday(withOffset));
     }
 
     public static long getStartOfDay(long timestamp)
     {
+        return getStartOfDay(timestamp, false);
+    }
+
+    private static long getStartOfDayOffset()
+    {
+        return startDayHourOffset * HOUR_LENGTH + startDayMinuteOffset * MINUTE_LENGTH;
+    }
+
+    public static long getStartOfDay(long timestamp, boolean withOffset)
+    {
+        if (withOffset)
+            timestamp -= getStartOfDayOffset();
         return (timestamp / DAY_LENGTH) * DAY_LENGTH;
     }
 
     public static long getStartOfToday()
     {
-        return getStartOfDay(getLocalTime());
+        return getStartOfToday(false);
     }
 
-    public static long getStartOfToday(int hourOffset, int minuteOffset)
+    public static long getStartOfToday(boolean withOffset)
     {
-        long totalOffset = hourOffset * HOUR_LENGTH + minuteOffset * MINUTE_LENGTH;
-        return getStartOfDay(getLocalTime() - totalOffset);
+        return getStartOfDay(getLocalTime(), withOffset);
+    }
+
+    public static long getTomorrowStart()
+    {
+        return getUpcomingTimeInMillis(startDayHourOffset, startDayMinuteOffset);
     }
 
     public static long millisecondsUntilTomorrow()
     {
-        return getStartOfToday() + DAY_LENGTH - getLocalTime();
+        return getTomorrowStart() - getLocalTime();
     }
 
     public static GregorianCalendar getStartOfTodayCalendar()
     {
-        return getCalendar(getStartOfToday());
+        return getStartOfTodayCalendar(false);
     }
 
     public static GregorianCalendar getStartOfTodayCalendar(boolean withOffset)
     {
-        if (withOffset)
-            return getCalendar(getStartOfToday(startDayHourOffset, startDayMinuteOffset));
-        else
-            return getCalendar(getStartOfToday());
+        return getCalendar(getStartOfToday(withOffset));
     }
 
     private static TimeZone getTimezone()

@@ -20,7 +20,6 @@
 package org.isoron.uhabits.activities.habits.list.views;
 
 import androidx.test.filters.*;
-import androidx.test.runner.*;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -42,7 +41,7 @@ public class HeaderViewTest extends BaseViewTest
 
     private Preferences prefs;
 
-    private MidnightTimer midnightTimer;
+    private DayStartTimer dayStartTimer;
 
     @Override
     @Before
@@ -50,8 +49,8 @@ public class HeaderViewTest extends BaseViewTest
     {
         super.setUp();
         prefs = mock(Preferences.class);
-        midnightTimer = mock(MidnightTimer.class);
-        view = new HeaderView(targetContext, prefs, midnightTimer);
+        dayStartTimer = mock(DayStartTimer.class);
+        view = new HeaderView(targetContext, prefs, dayStartTimer);
         view.setButtonCount(5);
         measureView(view, dpToPixels(600), dpToPixels(48));
     }

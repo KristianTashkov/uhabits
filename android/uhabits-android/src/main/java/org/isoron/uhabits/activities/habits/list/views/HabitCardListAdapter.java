@@ -21,7 +21,7 @@ package org.isoron.uhabits.activities.habits.list.views;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.*;
+
 import android.view.*;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,7 +47,7 @@ import javax.inject.*;
 public class HabitCardListAdapter
     extends RecyclerView.Adapter<HabitCardViewHolder> implements
                                                       HabitCardListCache.Listener,
-                                                      MidnightTimer.MidnightListener,
+        DayStartTimer.DayStartListener,
                                                       ListHabitsMenuBehavior.Adapter,
                                                       ListHabitsSelectionMenuBehavior.Adapter
 {
@@ -66,19 +66,19 @@ public class HabitCardListAdapter
     @NonNull
     private Preferences preferences;
 
-    private final MidnightTimer midnightTimer;
+    private final DayStartTimer dayStartTimer;
 
     @Inject
     public HabitCardListAdapter(@NonNull HabitCardListCache cache,
                                 @NonNull Preferences preferences,
-                                @NonNull MidnightTimer midnightTimer)
+                                @NonNull DayStartTimer dayStartTimer)
     {
         this.preferences = preferences;
         this.selected = new LinkedList<>();
         this.observable = new ModelObservable();
         this.cache = cache;
 
-        this.midnightTimer = midnightTimer;
+        this.dayStartTimer = dayStartTimer;
 
         cache.setListener(this);
         cache.setCheckmarkCount(
@@ -89,7 +89,7 @@ public class HabitCardListAdapter
     }
 
     @Override
-    public void atMidnight()
+    public void atDayStart()
     {
         cache.refreshAllHabits();
     }
@@ -169,7 +169,7 @@ public class HabitCardListAdapter
     public void onAttached()
     {
         cache.onAttached();
-        midnightTimer.addListener(this);
+        dayStartTimer.addListener(this);
     }
 
     @Override
@@ -216,7 +216,7 @@ public class HabitCardListAdapter
     public void onDetached()
     {
         cache.onDetached();
-        midnightTimer.removeListener(this);
+        dayStartTimer.removeListener(this);
     }
 
     @Override
