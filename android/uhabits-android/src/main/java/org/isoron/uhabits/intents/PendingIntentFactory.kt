@@ -27,6 +27,7 @@ import org.isoron.androidbase.*
 import org.isoron.uhabits.core.*
 import org.isoron.uhabits.core.models.*
 import org.isoron.uhabits.receivers.*
+import org.isoron.uhabits.widgets.*
 import javax.inject.*
 
 @AppScope
@@ -129,4 +130,14 @@ class PendingIntentFactory
                         if (timestamp != null) putExtra("timestamp", timestamp.unixTime)
                     },
                     FLAG_UPDATE_CURRENT)
+
+    fun updateWidgets(): PendingIntent =
+            PendingIntent.getBroadcast(
+                    context, 0,
+                    Intent(context, WidgetReceiver::class.java).apply {
+                        action = WidgetReceiver.ACTION_UPDATE_WIDGETS_VALUE
+                    },
+                    FLAG_UPDATE_CURRENT)
 }
+
+

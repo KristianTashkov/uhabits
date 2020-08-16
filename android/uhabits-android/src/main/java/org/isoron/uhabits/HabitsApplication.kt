@@ -25,6 +25,7 @@ import org.isoron.androidbase.*
 import org.isoron.uhabits.core.database.*
 import org.isoron.uhabits.core.reminders.*
 import org.isoron.uhabits.core.ui.*
+import org.isoron.uhabits.core.utils.*
 import org.isoron.uhabits.utils.*
 import org.isoron.uhabits.widgets.*
 import java.io.*
@@ -59,18 +60,20 @@ class HabitsApplication : Application() {
             db.renameTo(File(db.absolutePath + ".invalid"))
             DatabaseUtils.initializeDatabase(context)
         }
+        val prefs = component.preferences
+        prefs.setLastAppVersion(BuildConfig.VERSION_CODE)
+        val startDayOffset = prefs.startDayOffset
+        DateUtils.setStartDayOffset(startDayOffset.hours, startDayOffset.minutes)
 
         widgetUpdater = component.widgetUpdater
         widgetUpdater.startListening()
+        widgetUpdater.scheduleStartDayWidgetUpdate()
 
         reminderScheduler = component.reminderScheduler
         reminderScheduler.startListening()
 
         notificationTray = component.notificationTray
         notificationTray.startListening()
-
-        val prefs = component.preferences
-        prefs.setLastAppVersion(BuildConfig.VERSION_CODE)
 
         val taskRunner = component.taskRunner
         taskRunner.execute {

@@ -21,9 +21,11 @@ package org.isoron.uhabits.activities.settings;
 
 import android.app.backup.*;
 import android.content.*;
+import android.graphics.*;
 import android.net.*;
 import android.os.*;
 import android.provider.*;
+import android.text.format.*;
 import android.util.*;
 
 import androidx.annotation.Nullable;
@@ -32,11 +34,13 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.android.datetimepicker.time.*;
+
 import org.isoron.uhabits.R;
 import org.isoron.uhabits.*;
 import org.isoron.uhabits.core.preferences.*;
 import org.isoron.uhabits.core.ui.*;
-import org.isoron.uhabits.core.utils.*;
+import org.isoron.uhabits.core.utils.DateUtils;
 import org.isoron.uhabits.notifications.*;
 import org.isoron.uhabits.widgets.*;
 
@@ -151,10 +155,42 @@ public class SettingsFragment extends PreferenceFragmentCompat
         }
 
         updateWeekdayPreference();
+        updateCustomStartDayPreference();
 
         // Temporarily disable this; we now always ask
         findPreference("reminderSound").setVisible(false);
         findPreference("pref_snooze_interval").setVisible(false);
+    }
+
+    private void updateCustomStartDayPreference()
+    {
+        Preferences.TimeOfDay startDayOffset = prefs.getStartDayOffset();
+        Preference customStartDayPref = (Preference) findPreference("pref_custom_start_day");
+        String summary = String.format(
+                "%02d:%02d", startDayOffset.hours, startDayOffset.minutes);
+        customStartDayPref.setSummary(summary);
+        customStartDayPref.setOnPreferenceClickListener(preference ->
+        {
+            boolean is24HourMode = DateFormat.is24HourFormat(getContext());
+            TimePickerDialog dialog = TimePickerDialog.newInstance(
+                    new TimePickerDialog.OnTimeSetListener() {
+
+                @Override
+                public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute)
+                {
+                    prefs.setStartDayOffset(hourOfDay, minute);
+                }
+
+                @Override
+                public void onTimeCleared(RadialPickerLayout view)
+                {
+                    prefs.setStartDayOffset(0, 0);
+                }
+            }, startDayOffset.hours, startDayOffset.minutes, is24HourMode, Color.BLACK);
+            dialog.show(getFragmentManager(), "timePicker");
+
+            return true;
+        });
     }
 
     private void updateWeekdayPreference()
@@ -178,6 +214,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
         {
             Log.d("SettingsFragment", "updating widgets");
             widgetUpdater.updateWidgets();
+        }
+        if (key.equals("pref_start_day_offset"))
+        {
+            Preferences.TimeOfDay startDayOffset = prefs.getStartDayOffset();
+            DateUtils.setStartDayOffset(startDayOffset.hours, startDayOffset.minutes);
+            updateCustomStartDayPreference();
+            if (widgetUpdater != null)
+            {
+                widgetUpdater.scheduleStartDayWidgetUpdate();
+                widgetUpdater.updateWidgets();
+            }
         }
         if (key.equals("pref_first_weekday")) updateWeekdayPreference();
         BackupManager.dataChanged("org.isoron.uhabits");

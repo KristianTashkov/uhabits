@@ -37,10 +37,25 @@ public abstract class DateUtils
 
     private static Locale fixedLocale = null;
 
+    private static int startDayHourOffset = 0;
+
+    private static int startDayMinuteOffset = 0;
+
+    /**
+     * Number of milliseconds in one minute.
+     */
+
+    public static final long MINUTE_LENGTH = 60 * 1000;
+
+    /**
+     * Number of milliseconds in one hour.
+     */
+    public static final long HOUR_LENGTH = 60 * MINUTE_LENGTH;
+
     /**
      * Number of milliseconds in one day.
      */
-    public static final long DAY_LENGTH = 24 * 60 * 60 * 1000;
+    public static final long DAY_LENGTH = 24 * HOUR_LENGTH;
 
     public static long applyTimezone(long localTimestamp)
     {
@@ -162,27 +177,60 @@ public abstract class DateUtils
     @NonNull
     public static Timestamp getToday()
     {
-        return new Timestamp(getStartOfToday());
+        return getToday(false);
+    }
+
+    @NonNull
+    public static Timestamp getToday(boolean withOffset)
+    {
+        return new Timestamp(getStartOfToday(withOffset));
     }
 
     public static long getStartOfDay(long timestamp)
     {
+        return getStartOfDay(timestamp, false);
+    }
+
+    private static long getStartOfDayOffset()
+    {
+        return startDayHourOffset * HOUR_LENGTH + startDayMinuteOffset * MINUTE_LENGTH;
+    }
+
+    public static long getStartOfDay(long timestamp, boolean withOffset)
+    {
+        if (withOffset)
+            timestamp -= getStartOfDayOffset();
         return (timestamp / DAY_LENGTH) * DAY_LENGTH;
     }
 
     public static long getStartOfToday()
     {
-        return getStartOfDay(getLocalTime());
+        return getStartOfToday(false);
+    }
+
+    public static long getStartOfToday(boolean withOffset)
+    {
+        return getStartOfDay(getLocalTime(), withOffset);
+    }
+
+    public static long getTomorrowStart()
+    {
+        return getUpcomingTimeInMillis(startDayHourOffset, startDayMinuteOffset);
     }
 
     public static long millisecondsUntilTomorrow()
     {
-        return getStartOfToday() + DAY_LENGTH - getLocalTime();
+        return getTomorrowStart() - getLocalTime();
     }
 
     public static GregorianCalendar getStartOfTodayCalendar()
     {
-        return getCalendar(getStartOfToday());
+        return getStartOfTodayCalendar(false);
+    }
+
+    public static GregorianCalendar getStartOfTodayCalendar(boolean withOffset)
+    {
+        return getCalendar(getStartOfToday(withOffset));
     }
 
     private static TimeZone getTimezone()
@@ -210,6 +258,12 @@ public abstract class DateUtils
     public static void setFixedLocale(Locale locale)
     {
         fixedLocale = locale;
+    }
+
+    public static void setStartDayOffset(int hourOffset, int minuteOffset)
+    {
+        startDayHourOffset = hourOffset;
+        startDayMinuteOffset = minuteOffset;
     }
 
     private static Locale getLocale()

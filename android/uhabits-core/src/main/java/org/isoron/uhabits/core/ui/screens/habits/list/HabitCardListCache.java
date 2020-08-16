@@ -24,6 +24,7 @@ import androidx.annotation.*;
 import org.isoron.uhabits.core.*;
 import org.isoron.uhabits.core.commands.*;
 import org.isoron.uhabits.core.models.*;
+import org.isoron.uhabits.core.preferences.*;
 import org.isoron.uhabits.core.tasks.*;
 import org.isoron.uhabits.core.utils.*;
 
@@ -332,7 +333,7 @@ public class HabitCardListCache implements CommandRunner.Listener
             newData.copyScoresFrom(data);
             newData.copyCheckmarksFrom(data);
 
-            Timestamp dateTo = DateUtils.getToday();
+            Timestamp dateTo = DateUtils.getToday(true);
             Timestamp dateFrom = dateTo.minus(checkmarkCount - 1);
 
             if (runner != null) runner.publishProgress(this, -1);

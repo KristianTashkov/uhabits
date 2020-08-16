@@ -45,7 +45,7 @@ class ListHabitsRootView @Inject constructor(
         @ActivityContext context: Context,
         hintListFactory: HintListFactory,
         preferences: Preferences,
-        midnightTimer: MidnightTimer,
+        dayStartTimer: DayStartTimer,
         runner: TaskRunner,
         private val listAdapter: HabitCardListAdapter,
         habitCardListViewFactory: HabitCardListViewFactory
@@ -56,7 +56,7 @@ class ListHabitsRootView @Inject constructor(
     val tbar = buildToolbar()
     val progressBar = TaskProgressBar(context, runner)
     val hintView: HintView
-    val header = HeaderView(context, preferences, midnightTimer)
+    val header = HeaderView(context, preferences, dayStartTimer)
 
     init {
         val hints = resources.getStringArray(R.array.hints)

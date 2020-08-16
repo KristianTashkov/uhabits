@@ -26,6 +26,7 @@ import org.isoron.uhabits.*;
 import org.isoron.uhabits.core.preferences.*;
 import org.isoron.uhabits.core.ui.widgets.*;
 import org.isoron.uhabits.intents.*;
+import org.isoron.uhabits.widgets.*;
 import org.isoron.uhabits.widgets.activities.*;
 
 import dagger.*;
@@ -54,6 +55,8 @@ public class WidgetReceiver extends BroadcastReceiver
 
     public static final String ACTION_SET_YESNO_VALUE =
             "org.isoron.uhabits.ACTION_SET_YESNO_VALUE";
+    public static final String ACTION_UPDATE_WIDGETS_VALUE =
+            "org.isoron.uhabits.ACTION_UPDATE_WIDGETS_VALUE";
 
     private static final String TAG = "WidgetReceiver";
 
@@ -71,13 +74,17 @@ public class WidgetReceiver extends BroadcastReceiver
         IntentParser parser = app.getComponent().getIntentParser();
         WidgetBehavior controller = component.getWidgetController();
         Preferences prefs = app.getComponent().getPreferences();
+        WidgetUpdater widgetUpdater = app.getComponent().getWidgetUpdater();
 
         Log.i(TAG, String.format("Received intent: %s", intent.toString()));
 
         try
         {
-            IntentParser.CheckmarkIntentData data;
-            data = parser.parseCheckmarkIntent(intent);
+            IntentParser.CheckmarkIntentData data = null;
+            if (intent.getAction() != ACTION_UPDATE_WIDGETS_VALUE)
+            {
+                data = parser.parseCheckmarkIntent(intent);
+            }
 
             switch (intent.getAction())
             {
@@ -135,6 +142,9 @@ public class WidgetReceiver extends BroadcastReceiver
                         parser.copyIntentData(intent, checkmarkOptionsSelector);
                         context.startActivity(checkmarkOptionsSelector);
                     }
+                case ACTION_UPDATE_WIDGETS_VALUE:
+                    widgetUpdater.updateWidgets();
+                    widgetUpdater.scheduleStartDayWidgetUpdate();
                     break;
             }
         }

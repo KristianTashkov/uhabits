@@ -146,7 +146,7 @@ public abstract class RepetitionList
     public HashMap<Timestamp, Integer[]> getWeekdayFrequency()
     {
         List<Repetition> reps =
-                getByInterval(Timestamp.ZERO, DateUtils.getToday());
+                getByInterval(Timestamp.ZERO, DateUtils.getToday(true));
         HashMap<Timestamp, Integer[]> map = new HashMap<>();
 
         for (Repetition r : reps)

@@ -62,7 +62,7 @@ class CheckmarkPanelView(
 
     @Synchronized
     override fun setupButtons() {
-        val today = DateUtils.getToday()
+        val today = DateUtils.getToday(true)
 
         buttons.forEachIndexed { index, button ->
             val timestamp = today.minus(index + dataOffset)

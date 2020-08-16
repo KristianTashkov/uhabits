@@ -203,4 +203,5 @@
     <string name="skip_button_text">&#xf146;\nSkip</string>
     <string name="delete_button_text">&#xf05e;\nDelete</string>
     <string name="default_checkmark_option_question">Have you completed this habit</string>
+    <string name="custom_start_day">Custom start of the day</string>
 </resources>
