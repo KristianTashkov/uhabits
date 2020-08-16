@@ -34,13 +34,13 @@ class ListHabitsActivity : HabitsActivity() {
     lateinit var rootView: ListHabitsRootView
     lateinit var screen: ListHabitsScreen
     lateinit var prefs: Preferences
-    lateinit var midnightTimer: MidnightTimer
+    lateinit var dayStartTimer: DayStartTimer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prefs = appComponent.preferences
         pureBlack = prefs.isPureBlackEnabled
-        midnightTimer = appComponent.midnightTimer
+        dayStartTimer = appComponent.dayStartTimer
         rootView = component.listHabitsRootView
         screen = component.listHabitsScreen
         adapter = component.habitCardListAdapter
@@ -51,7 +51,7 @@ class ListHabitsActivity : HabitsActivity() {
     }
 
     override fun onPause() {
-        midnightTimer.onPause()
+        dayStartTimer.onPause()
         screen.onDettached()
         adapter.cancelRefresh()
         super.onPause()
@@ -61,7 +61,7 @@ class ListHabitsActivity : HabitsActivity() {
         adapter.refresh()
         screen.onAttached()
         rootView.postInvalidate()
-        midnightTimer.onResume()
+        dayStartTimer.onResume()
 
         if (prefs.theme == THEME_DARK && prefs.isPureBlackEnabled != pureBlack) {
             restartWithFade(ListHabitsActivity::class.java)

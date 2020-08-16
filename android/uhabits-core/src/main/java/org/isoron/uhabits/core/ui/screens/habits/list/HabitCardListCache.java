@@ -69,25 +69,19 @@ public class HabitCardListCache implements CommandRunner.Listener
     @NonNull
     private final CommandRunner commandRunner;
 
-    @NonNull
-    private final Preferences preferences;
-
     @Inject
     public HabitCardListCache(@NonNull HabitList allHabits,
                               @NonNull CommandRunner commandRunner,
-                              @NonNull TaskRunner taskRunner,
-                              @NonNull Preferences preferences)
+                              @NonNull TaskRunner taskRunner)
     {
         if (allHabits == null) throw new NullPointerException();
         if (commandRunner == null) throw new NullPointerException();
         if (taskRunner == null) throw new NullPointerException();
-        if (preferences == null) throw new NullPointerException();
 
         this.allHabits = allHabits;
         this.commandRunner = commandRunner;
         this.filteredHabits = allHabits;
         this.taskRunner = taskRunner;
-        this.preferences = preferences;
 
         this.listener = new Listener()
         {

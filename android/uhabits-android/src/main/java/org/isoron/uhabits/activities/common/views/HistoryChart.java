@@ -517,8 +517,8 @@ public class HistoryChart extends ScrollableChart
         Calendar date = (Calendar) baseDate.clone();
         date.add(Calendar.DAY_OF_YEAR, offset);
 
-        if (DateUtils.getStartOfDay(date.getTimeInMillis()) >
-            DateUtils.getStartOfToday()) return null;
+        if (DateUtils.getStartOfDay(date.getTimeInMillis(), true) >
+            DateUtils.getStartOfToday(true)) return null;
 
         return new Timestamp(date.getTimeInMillis());
     }

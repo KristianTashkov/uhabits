@@ -60,20 +60,19 @@ class HabitsApplication : Application() {
             db.renameTo(File(db.absolutePath + ".invalid"))
             DatabaseUtils.initializeDatabase(context)
         }
+        val prefs = component.preferences
+        prefs.setLastAppVersion(BuildConfig.VERSION_CODE)
+        DateUtils.setStartDayOffset(prefs.startDayHourOffset, prefs.startDayMinuteOffset)
 
         widgetUpdater = component.widgetUpdater
         widgetUpdater.startListening()
+        widgetUpdater.scheduleStartDayWidgetUpdate()
 
         reminderScheduler = component.reminderScheduler
         reminderScheduler.startListening()
 
         notificationTray = component.notificationTray
         notificationTray.startListening()
-
-        val prefs = component.preferences
-        prefs.setLastAppVersion(BuildConfig.VERSION_CODE)
-
-        DateUtils.setStartDayOffset(prefs.startDayHourOffset, prefs.startDayMinuteOffset)
 
         val taskRunner = component.taskRunner
         taskRunner.execute {
