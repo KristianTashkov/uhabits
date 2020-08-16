@@ -106,7 +106,7 @@ class HeaderView(
         }
 
         fun draw(canvas: Canvas) {
-            val day = getStartOfTodayCalendar()
+            val day = getStartOfTodayCalendar(true)
             val width = dim(R.dimen.checkmarkWidth)
             val height = dim(R.dimen.checkmarkHeight)
             val isReversed = prefs.isCheckmarkSequenceReversed

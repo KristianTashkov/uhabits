@@ -69,7 +69,7 @@ public abstract class ScoreList implements Iterable<Score>
      */
     public double getTodayValue()
     {
-        return getValue(DateUtils.getToday());
+        return getValue(DateUtils.getToday(true));
     }
 
     /**
@@ -222,7 +222,7 @@ public abstract class ScoreList implements Iterable<Score>
         Repetition oldestRep = habit.getRepetitions().getOldest();
         if (oldestRep == null) return;
 
-        Timestamp today = DateUtils.getToday();
+        Timestamp today = DateUtils.getToday(true);
         compute(oldestRep.getTimestamp(), today);
     }
 
