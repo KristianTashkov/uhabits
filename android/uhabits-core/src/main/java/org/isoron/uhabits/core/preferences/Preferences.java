@@ -18,17 +18,28 @@
  */
 
 package org.isoron.uhabits.core.preferences;
-
 import androidx.annotation.*;
 
 import org.isoron.uhabits.core.models.*;
 import org.isoron.uhabits.core.ui.*;
 import org.isoron.uhabits.core.utils.*;
+import org.isoron.uhabits.core.utils.StringUtils;
 
 import java.util.*;
+import java.util.List;
 
 public class Preferences
 {
+    public class TimeOfDay
+    {
+        public final int hours;
+        public final int minutes;
+        public TimeOfDay(int hours, int minutes)
+        {
+            this.hours = hours;
+            this.minutes = minutes;
+        }
+    }
 
     public static final String DEFAULT_SYNC_SERVER =
         "https://sync.loophabits.org";
@@ -346,14 +357,17 @@ public class Preferences
         return Integer.parseInt(weekday);
     }
 
-    public int getStartDayHourOffset()
+    public TimeOfDay getStartDayOffset()
     {
-        return storage.getInt("pref_start_day_offset_hour", 3);
+        String offset = storage.getString("pref_start_day_offset", "0:0");
+        String[] offsetParts = offset.split(":");
+        return new TimeOfDay(Integer.valueOf(offsetParts[0]), Integer.valueOf(offsetParts[1]));
     }
 
-    public int getStartDayMinuteOffset()
+    public void setStartDayOffset(int hourOffset, int minuteOffset)
     {
-        return storage.getInt("pref_start_day_offset_minute", 0);
+        String offset = Integer.toString(hourOffset) + ":" + Integer.toString(minuteOffset);
+        storage.putString("pref_start_day_offset", offset);
     }
 
     public interface Listener

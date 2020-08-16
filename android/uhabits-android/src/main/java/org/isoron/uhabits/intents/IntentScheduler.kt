@@ -69,7 +69,7 @@ class IntentScheduler
 
     override fun scheduleWidgetUpdate(updateTime: Long) {
         val intent = pendingIntents.updateWidgets()
-        schedule(updateTime, intent, RTC_WAKEUP)
+        schedule(updateTime, intent, RTC)
     }
 
     override fun log(componentName: String, msg: String) {
