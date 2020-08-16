@@ -47,6 +47,7 @@ public class BaseAndroidJVMTest
     {
         long fixed_local_time = 1422172800000L;
         DateUtils.setFixedLocalTime(fixed_local_time);
+        DateUtils.setStartDayOffset(0, 0);
 
         modelFactory = new MemoryModelFactory();
         habitList = spy(modelFactory.buildHabitList());
@@ -59,6 +60,7 @@ public class BaseAndroidJVMTest
     public void tearDown()
     {
         DateUtils.setFixedLocalTime(null);
+        DateUtils.setStartDayOffset(0, 0);
     }
 
     public long timestamp(int year, int month, int day)
