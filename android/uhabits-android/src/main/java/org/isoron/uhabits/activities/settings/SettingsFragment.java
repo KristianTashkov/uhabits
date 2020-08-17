@@ -38,6 +38,7 @@ import com.android.datetimepicker.time.*;
 
 import org.isoron.uhabits.R;
 import org.isoron.uhabits.*;
+import org.isoron.uhabits.core.models.*;
 import org.isoron.uhabits.core.preferences.*;
 import org.isoron.uhabits.core.ui.*;
 import org.isoron.uhabits.core.utils.DateUtils;
@@ -65,6 +66,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
     @Nullable
     private WidgetUpdater widgetUpdater;
 
+    @Nullable
+    private HabitList habitList;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -90,6 +94,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             HabitsApplication app = (HabitsApplication) appContext;
             prefs = app.getComponent().getPreferences();
             widgetUpdater = app.getComponent().getWidgetUpdater();
+            habitList = app.getComponent().getHabitList();
         }
 
         setResultOnPreferenceClick("importData", RESULT_IMPORT_DATA);
@@ -206,6 +211,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
         weekdayPref.setSummary(dayNames[currentFirstWeekday % 7]);
     }
 
+    private void updateAllHabits()
+    {
+        List<Habit> habits = new ArrayList<>();
+        for (Habit habit : habitList)
+        {
+            habits.add(habit);
+            habit.invalidateNewerThan(Timestamp.ZERO);
+        }
+        habitList.update(habits);
+    }
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key)
@@ -219,6 +235,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
         {
             Preferences.TimeOfDay startDayOffset = prefs.getStartDayOffset();
             DateUtils.setStartDayOffset(startDayOffset.hours, startDayOffset.minutes);
+            updateAllHabits();
             updateCustomStartDayPreference();
             if (widgetUpdater != null)
             {
