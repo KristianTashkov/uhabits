@@ -121,7 +121,7 @@ public class ReminderScheduler implements CommandRunner.Listener
             return;
         }
 
-        long timestamp = getStartOfDay(removeTimezone(reminderTime));
+        long timestamp = getStartOfDay(removeTimezone(reminderTime), true);
         sys.log("ReminderScheduler",
                 String.format(
                         Locale.US,

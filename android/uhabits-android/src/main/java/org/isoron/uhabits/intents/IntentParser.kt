@@ -38,7 +38,7 @@ class IntentParser
 
     fun copyIntentData(source: Intent, destination: Intent) {
         destination.data = source.data;
-        destination.putExtra("timestamp", source.getLongExtra("timestamp", DateUtils.getLocalTime()))
+        destination.putExtra("timestamp", source.getLongExtra("timestamp", DateUtils.getToday(true).unixTime))
     }
 
     private fun parseHabit(uri: Uri): Habit {
@@ -48,11 +48,11 @@ class IntentParser
     }
 
     private fun parseTimestamp(intent: Intent): Timestamp {
-        val now = DateUtils.getLocalTime()
-        var timestamp = intent.getLongExtra("timestamp", now)
-        timestamp = DateUtils.getStartOfDay(timestamp, true)
+        val today = DateUtils.getToday(true).unixTime
+        var timestamp = intent.getLongExtra("timestamp", today)
+        timestamp = DateUtils.getStartOfDay(timestamp)
 
-        if (timestamp < 0 || timestamp > now)
+        if (timestamp < 0 || timestamp > today)
             throw IllegalArgumentException("timestamp is not valid")
 
         return Timestamp(timestamp)
