@@ -72,23 +72,37 @@ public class NotificationTray
         active.remove(habit);
     }
 
+    private void checkRepetitionCommandExecuted(@NonNull Command command)
+    {
+        Habit habit = null;
+        if (command instanceof ToggleRepetitionCommand)
+        {
+            ToggleRepetitionCommand toggleCmd =
+                    (ToggleRepetitionCommand) command;
+            habit = toggleCmd.getHabit();
+        }
+        else if (command instanceof CreateRepetitionCommand)
+        {
+            CreateRepetitionCommand createRepetitionCmd =
+                    (CreateRepetitionCommand) command;
+            habit = createRepetitionCmd.getHabit();
+        }
+
+        if (habit == null) return;
+
+        Habit finalHabit = habit;
+        taskRunner.execute(() ->
+        {
+            if (finalHabit.getCheckmarks().getTodayValue() != Checkmark.UNCHECKED)
+                cancel(finalHabit);
+        });
+    }
+
     @Override
     public void onCommandExecuted(@NonNull Command command,
                                   @Nullable Long refreshKey)
     {
-        if (command instanceof ToggleRepetitionCommand)
-        {
-            ToggleRepetitionCommand toggleCmd =
-                (ToggleRepetitionCommand) command;
-
-            Habit habit = toggleCmd.getHabit();
-            taskRunner.execute(() ->
-            {
-                if (habit.getCheckmarks().getTodayValue() !=
-                    Checkmark.UNCHECKED) cancel(habit);
-            });
-        }
-
+        checkRepetitionCommandExecuted(command);
         if (command instanceof DeleteHabitsCommand)
         {
             DeleteHabitsCommand deleteCommand = (DeleteHabitsCommand) command;
