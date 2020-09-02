@@ -85,6 +85,8 @@ public class HistoryChart extends ScrollableChart
 
     private int reverseTextColor;
 
+    private int backgroundColor;
+
     private boolean isEditable;
 
     private String previousMonth;
@@ -369,10 +371,11 @@ public class HistoryChart extends ScrollableChart
                             GregorianCalendar date,
                             int checkmarkOffset)
     {
+        int checkmark = 0;
         if (checkmarkOffset >= checkmarks.length) pSquareBg.setColor(colors[0]);
         else
         {
-            int checkmark = checkmarks[checkmarkOffset];
+            checkmark = checkmarks[checkmarkOffset];
             if(isNotCompleted(checkmark)) pSquareBg.setColor(colors[0]);
             else if(isImplicitlyCompleted(checkmark))
             {
@@ -384,6 +387,28 @@ public class HistoryChart extends ScrollableChart
         pSquareFg.setColor(reverseTextColor);
         float round = dpToPixels(getContext(), 2);
         canvas.drawRoundRect(location, round, round, pSquareBg);
+
+        if (!isNumerical && checkmark == Checkmark.SKIPPED_EXPLICITLY)
+        {
+            pSquareBg.setColor(backgroundColor);
+            pSquareBg.setStrokeWidth(columnWidth * 0.025f);
+
+            canvas.save();
+            canvas.clipRect(location);
+            float offset = - columnWidth;
+            for (int k = 0; k < 10; k++)
+            {
+                offset += columnWidth / 5;
+                canvas.drawLine(location.left + offset,
+                        location.bottom,
+                        location.right + offset,
+                        location.top,
+                        pSquareBg);
+            }
+            canvas.restore();
+        }
+
+
         String text = Integer.toString(date.get(Calendar.DAY_OF_MONTH));
         canvas.drawText(text, location.centerX(),
             location.centerY() + squareTextOffset, pSquareFg);
@@ -419,6 +444,7 @@ public class HistoryChart extends ScrollableChart
         if (isBackgroundTransparent)
             primaryColor = ColorUtils.setMinValue(primaryColor, 0.75f);
         int lighterPrimaryColor = ColorUtils.setAlpha(primaryColor, 0.5f);
+        backgroundColor = res.getColor(R.attr.cardBgColor);
 
         if (isBackgroundTransparent)
         {
