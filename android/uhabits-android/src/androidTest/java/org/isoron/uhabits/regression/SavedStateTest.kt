@@ -43,7 +43,7 @@ class SavedStateTest : BaseUserInterfaceTest() {
         launchApp()
         clickMenu(ADD)
         setReminder()
-        clickReminderDays()
+        clickActiveDays()
         unselectAllDays()
         rotateDevice()
         clickText("Monday")

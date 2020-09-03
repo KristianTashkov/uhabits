@@ -1,0 +1,1 @@
+alter table Habits rename column reminder_days to active_days;

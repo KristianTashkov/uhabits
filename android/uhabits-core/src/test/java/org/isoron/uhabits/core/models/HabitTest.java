@@ -60,7 +60,8 @@ public class HabitTest extends BaseUnitTest
         model.setArchived(true);
         model.setColor(0);
         model.setFrequency(new Frequency(10, 20));
-        model.setReminder(new Reminder(8, 30, new WeekdayList(1)));
+        model.setReminder(new Reminder(8, 30));
+        model.setActiveDays(new WeekdayList(1));
 
         Habit habit = modelFactory.buildHabit();
         habit.copyFrom(model);
@@ -77,7 +78,7 @@ public class HabitTest extends BaseUnitTest
         Habit h = modelFactory.buildHabit();
         assertThat(h.hasReminder(), is(false));
 
-        h.setReminder(new Reminder(8, 30, WeekdayList.EVERY_DAY));
+        h.setReminder(new Reminder(8, 30));
         assertThat(h.hasReminder(), is(true));
 
         h.clearReminder();
@@ -148,7 +149,7 @@ public class HabitTest extends BaseUnitTest
     public void testToString() throws Exception
     {
         Habit h = modelFactory.buildHabit();
-        h.setReminder(new Reminder(22, 30, WeekdayList.EVERY_DAY));
+        h.setReminder(new Reminder(22, 30));
         String expected = "{id: <null>, data: {name: , description: ," +
                           " frequency: {numerator: 3, denominator: 7}," +
                           " color: 8, archived: false, targetType: 0," +

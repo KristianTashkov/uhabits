@@ -239,10 +239,10 @@ public class NotificationTray
             if (!habit.hasReminder()) return false;
             Reminder reminder = habit.getReminder();
 
-            boolean reminderDays[] = reminder.getDays().toArray();
+            boolean activeDays[] = habit.getActiveDays().toArray();
             int weekday = timestamp.getWeekday();
 
-            return reminderDays[weekday];
+            return activeDays[weekday];
         }
     }
 }
