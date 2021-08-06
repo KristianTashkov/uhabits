@@ -71,7 +71,7 @@ class HabitsApplication : Application() {
         prefs.lastAppVersion = BuildConfig.VERSION_CODE
 
         if (prefs.isMidnightDelayEnabled) {
-            setStartDayOffset(3, 0)
+            setStartDayOffset(4, 0)
         } else {
             setStartDayOffset(0, 0)
         }
