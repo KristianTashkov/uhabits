@@ -18,8 +18,8 @@
  */
 package org.isoron.uhabits.core.models
 
-import javax.annotation.concurrent.ThreadSafe
-import kotlin.math.min
+import javax.annotation.concurrent.*
+import kotlin.math.*
 
 @ThreadSafe
 class StreakList {
@@ -40,26 +40,35 @@ class StreakList {
         to: Timestamp,
     ) {
         list.clear()
-        val timestamps = computedEntries
-            .getByInterval(from, to)
-            .filter { it.value > 0 }
-            .map { it.timestamp }
-            .toTypedArray()
+        val entries = computedEntries.getByInterval(from, to)
+        var current: Timestamp = from
+        var lastChecked: Timestamp = from
+        var streakStart: Timestamp = from
+        var isInStreak = false
+        var skipDaysInStreak = 0
 
-        if (timestamps.isEmpty()) return
+        for (i in entries.size - 1 downTo 0) {
+            val value = entries[i].value
+            current = entries[i].timestamp
+            val isCurrentChecked = value == Entry.YES_AUTO || value == Entry.YES_MANUAL
+            val isCurrentUnchecked = value == Entry.NO || value == Entry.UNKNOWN
 
-        var begin = timestamps[0]
-        var end = timestamps[0]
-        for (i in 1 until timestamps.size) {
-            val current = timestamps[i]
-            if (current == begin.minus(1)) {
-                begin = current
-            } else {
-                list.add(Streak(begin, end))
-                begin = current
-                end = current
+            if (isCurrentChecked) lastChecked = current
+            if (isInStreak && value == Entry.SKIP) skipDaysInStreak += 1
+            else if (isInStreak && isCurrentUnchecked) {
+                skipDaysInStreak -= lastChecked.daysUntil(current) - 1
+                list.add(Streak(streakStart, lastChecked, skipDaysInStreak))
+                isInStreak = false
+            } else if (!isInStreak && isCurrentChecked) {
+                streakStart = current
+                isInStreak = true
+                skipDaysInStreak = 0
             }
         }
-        list.add(Streak(begin, end))
+
+        if (isInStreak) {
+            skipDaysInStreak -= lastChecked.daysUntil(current)
+            list.add(Streak(streakStart, lastChecked, skipDaysInStreak))
+        }
     }
 }

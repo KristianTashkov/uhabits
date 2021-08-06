@@ -83,7 +83,7 @@ class StreakChart : View {
         for (i in 0..9) {
             val length = Random().nextInt(100)
             val end = start.plus(length)
-            streaks.add(Streak(start, end))
+            streaks.add(Streak(start, end, 0))
             start = end.plus(1)
         }
         setStreaks(streaks)
