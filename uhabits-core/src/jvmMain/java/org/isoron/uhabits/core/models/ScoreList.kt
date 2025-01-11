@@ -99,17 +99,18 @@ class ScoreList {
                     rollingSum -= max(0, values[offset + denominator])
                 }
 
-                val normalizedRollingSum = rollingSum / 1000
                 if (values[offset] != Entry.SKIP) {
+                    val normalizedRollingSum = max(0.0, rollingSum / 1000 - targetValue / 2)
+                    val normalizedTargetValue = targetValue / 2
                     val percentageCompleted = if (!isAtMost) {
-                        if (targetValue > 0) {
-                            min(1.0, normalizedRollingSum / targetValue)
+                        if (normalizedTargetValue > 0) {
+                            min(1.0, normalizedRollingSum / normalizedTargetValue)
                         } else {
                             1.0
                         }
                     } else {
-                        if (targetValue > 0) {
-                            (1 - ((normalizedRollingSum - targetValue) / targetValue)).coerceIn(
+                        if (normalizedTargetValue > 0) {
+                            (1 - ((normalizedRollingSum - normalizedTargetValue) / normalizedTargetValue)).coerceIn(
                                 0.0,
                                 1.0
                             )
